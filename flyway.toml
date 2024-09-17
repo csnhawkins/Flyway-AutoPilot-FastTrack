@@ -1,22 +1,28 @@
 id = "97ea357d-2613-4415-b434-775478105625"
-name = "FlywayTrialProject"
+name = "AutoPilotFastTrack"
 databaseType = "SqlServer"
 
 [environments.development]
-url = "jdbc:sqlserver://localhost;databaseName=WidgetDev;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
-schemas = [ ]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetDev;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
 displayName = "Development database"
 
 [environments.shadow]
-url = "jdbc:sqlserver://localhost;databaseName=WidgetZShadow;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
-schemas = [ ]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetZShadow;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
 displayName = "Shadow database"
 provisioner = "clean"
 
-[environments.production]
-url = "jdbc:sqlserver://localhost;databaseName=WidgetProd;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
-schemas = [ ]
+[environments.Prod]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetProd;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
 displayName = "Production"
+
+[environments.Test]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetTest;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
+
+[environments.Check]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetZCheck;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
+
+[environments.Build]
+url = "jdbc:sqlserver://localhost;instanceName=SQLEXPRESS;databaseName=WidgetZBuild;encrypt=true;integratedSecurity=true;trustServerCertificate=true"
 
 [flyway]
 locations = [ "filesystem:migrations" ]
@@ -26,7 +32,6 @@ validateMigrationNaming = true
 defaultSchema = "dbo"
 baselineOnMigrate = true
 baselineVersion = "001_20230703120714"
-
 
 [flywayDesktop]
 developmentEnvironment = "development"
