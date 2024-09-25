@@ -29,7 +29,7 @@ variables:
   BASELINE_VERSION: "001" # This should match the version number of your baseline script
   FIRST_UNDO_SCRIPT: "002" # This should match the first undo version in your project
   
-  # Optional - For Microsoft Hosted Agents, it's necessary to ensure Flyway is installed on each run. Therefore, the below variables are required
+  # Optional - For Microsoft Hosted Agents, or machines that are wiped after each run, it's necessary to ensure Flyway is installed on each run. Therefore, set the below value to true to enable the Flyway CLI check and install step
   MICROSOFT_HOSTED_AGENT: "false" # Setting to false will skip the Flyway CLI check step
   FLYWAY_VERSION: "10.17.3" # This outlines the version of Flyway CLI that will be downloaded if no Flyway CLI is detected on the target agent
 
