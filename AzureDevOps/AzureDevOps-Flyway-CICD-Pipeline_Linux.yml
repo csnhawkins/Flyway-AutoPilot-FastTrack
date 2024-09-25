@@ -11,7 +11,7 @@ name: Flyway-AutoPilot-Simple-Pipeline-Linux
 #       - migrations/*
 
 pool:
-  name: "" # To be set when a self-hosted agent pool is to be used alongside this pipeline
+  name: "default" # To be set when a self-hosted agent pool is to be used alongside this pipeline
   # vmImage: "" # To be used when a microsoft-hosted agent is used alongside this pipeline (Such as ubuntu-latest)
 
 variables:
