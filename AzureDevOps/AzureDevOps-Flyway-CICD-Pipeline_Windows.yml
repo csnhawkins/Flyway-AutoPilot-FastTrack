@@ -2,7 +2,7 @@
 
 name: Flyway-AutoPilot-Simple-Pipeline-Windows
 
-# trigger: #Uncomment lines 3-9 to enable an automatic pipeline trigger for any new migration scripts found in your preferred branch
+trigger: none
 #   branches:
 #     include:
 #       - release
