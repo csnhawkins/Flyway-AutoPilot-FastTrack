@@ -48,14 +48,16 @@ jobs:
 
       - name: Execute SQL Script to Create Test Databases
         run: |
-          docker exec -i $(docker ps -q --filter ancestor=${{ env.DB_IMAGE }}) /opt/mssql-tools18/bin/sqlcmd \
-            -S localhost -U sa -P '${{ env.SA_PASSWORD }}' -i "/var/opt/mssql/scripts/CreateAutoPilotDatabases.sql"
+          CONTAINER_ID=$(docker ps -q --filter ancestor=${{ env.DB_IMAGE }})
+          docker exec -i $CONTAINER_ID /bin/bash -c "
+            /opt/mssql-tools18/bin/sqlcmd -S 'localhost,${{ env.DB_PORT }}' -U sa -P '${{ env.SA_PASSWORD }}' -i '/var/opt/mssql/scripts/CreateAutoPilotDatabases.sql' -I -C -v TrustServerCertificate=yes
+          "
 
       - name: Verify Databases Were Created
         run: |
           docker exec -i $(docker ps -q --filter ancestor=${{ env.DB_IMAGE }}) /opt/mssql-tools/bin/sqlcmd \
             -S localhost -U sa -P '${{ env.SA_PASSWORD }}' \
-            -Q "SELECT name FROM sys.databases"
+            -Q "SELECT name FROM sys.databases" -I -C -v TrustServerCertificate=yes
 
   # run-customer-pipeline:
   #   name: Run Customer Pipeline
