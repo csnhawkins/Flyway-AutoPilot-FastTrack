@@ -1,0 +1,54 @@
+name: GitHub - Pipeline Validation Workflow
+
+on:
+  pull_request:
+    branches:
+      - release
+  schedule:
+    - cron: "0 3 * * *"  # Runs at 3 AM UTC every night
+
+jobs:
+  setup-test-environment:
+    name: Spin Up Test SQL Server
+    runs-on: ubuntu-latest
+    env:
+      DB_IMAGE: "mcr.microsoft.com/mssql/server:2022-latest"
+      DB_PORT: "1433"
+      SA_PASSWORD: "YourStrong!Passw0rd"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Start SQL Server with Access to Backups & Scripts
+        run: |
+          docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=${{ env.SA_PASSWORD }}" \
+            -p ${{ env.DB_PORT }}:1433 -d \
+            -v ${{ github.workspace }}/backups:/var/opt/mssql/backups \
+            -v ${{ github.workspace }}/Scripts:/var/opt/mssql/scripts \
+            ${{ env.DB_IMAGE }}
+
+      - name: Wait for SQL Server to be ready
+        run: sleep 20  # Ensure SQL Server is fully initialized
+
+      - name: Execute SQL Script to Create Test Databases
+        run: |
+          docker exec -i $(docker ps -q --filter ancestor=${{ env.DB_IMAGE }}) /opt/mssql-tools/bin/sqlcmd \
+            -S localhost -U sa -P '${{ env.SA_PASSWORD }}' -i "/var/opt/mssql/scripts/CreateAutoPilotDatabases.sql"
+
+      - name: Verify Databases Were Created
+        run: |
+          docker exec -i $(docker ps -q --filter ancestor=${{ env.DB_IMAGE }}) /opt/mssql-tools/bin/sqlcmd \
+            -S localhost -U sa -P '${{ env.SA_PASSWORD }}' \
+            -Q "SELECT name FROM sys.databases"
+
+  # run-customer-pipeline:
+  #   name: Run Customer Pipeline
+  #   needs: setup-test-environment
+  #   uses: ./.github/workflows/customer-pipeline.yml
+  #   with:
+  #     db_user: ${{ needs.setup-test-database.outputs.db_user }}
+  #     db_password: ${{ needs.setup-test-database.outputs.db_password }}
+  #     db_jdbc: ${{ needs.setup-test-database.outputs.db_jdbc }}
+  #   secrets: inherit  # Inherit existing secrets but allow environment overrides
+
+
