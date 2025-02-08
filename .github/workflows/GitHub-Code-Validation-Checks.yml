@@ -67,7 +67,7 @@ jobs:
       
       - name: Test connection from runner to SQL Server
         run: |
-              curl "jdbc:sqlserver://localhost:1433;user=sa;password=${{ env.SA_PASSWORD }};encrypt=true;trustServerCertificate=true"
+              curl "jdbc:sqlserver://localhost:1433;user=sa;password=Redg@te1;encrypt=true;trustServerCertificate=true"
 
   Validate-Flyway-Pipeline:
     name: Run Flyway Pipeline
