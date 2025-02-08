@@ -59,14 +59,14 @@ jobs:
             -S localhost -U sa -P '${{ env.SA_PASSWORD }}' \
             -Q "SELECT name FROM sys.databases" -I -C -v TrustServerCertificate=yes
 
-  # run-customer-pipeline:
-  #   name: Run Customer Pipeline
-  #   needs: setup-test-environment
-  #   uses: ./.github/workflows/customer-pipeline.yml
-  #   with:
-  #     db_user: ${{ needs.setup-test-database.outputs.db_user }}
-  #     db_password: ${{ needs.setup-test-database.outputs.db_password }}
-  #     db_jdbc: ${{ needs.setup-test-database.outputs.db_jdbc }}
-  #   secrets: inherit  # Inherit existing secrets but allow environment overrides
+  Validate-Flyway-Pipeline:
+    name: Run Flyway Pipeline
+    needs: setup-test-environment
+    uses: ./.github/workflows/GitHub-Flyway-CICD-Pipeline_Linux.yml
+    # with:
+    #   db_user: ${{ needs.setup-test-database.outputs.db_user }}
+    #   db_password: ${{ needs.setup-test-database.outputs.db_password }}
+    #   db_jdbc: ${{ needs.setup-test-database.outputs.db_jdbc }}
+    secrets: inherit  # Inherit existing secrets but allow environment overrides
 
 
