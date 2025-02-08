@@ -34,7 +34,7 @@ jobs:
         run: |
           CONTAINER_ID=$(docker ps -q --filter ancestor=${{ env.DB_IMAGE }})
           docker exec -i $CONTAINER_ID /bin/bash -c "
-            /opt/mssql-tools18/bin/sqlcmd -S 'localhost,${{ env.DB_PORT }}' -U sa -P '${{ env.SA_PASSWORD }}' -Q \
+            /opt/mssql-tools18/bin/sqlcmd -S 'localhost,${{ env.DB_PORT }}' -U sa -P '${{ env.SA_PASSWORD }}' -v TrustServerCertificate=yes -Q \
               \"EXEC sp_configure 'remote access', 1; RECONFIGURE;\"
             "
 
