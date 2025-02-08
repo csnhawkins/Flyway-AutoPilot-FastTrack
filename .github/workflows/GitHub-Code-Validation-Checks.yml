@@ -30,7 +30,7 @@ jobs:
             -v ${{ github.workspace }}/Scripts:/var/opt/mssql/scripts \
             ${{ env.DB_IMAGE }} 
 
-      - name: Enabled TCP/IP
+      - name: Enabled Remote Access Configuration
         run: |
           CONTAINER_ID=$(docker ps -q --filter ancestor=${{ env.DB_IMAGE }})
           docker exec -i $CONTAINER_ID /bin/bash -c "
@@ -60,6 +60,14 @@ jobs:
           docker exec -i $(docker ps -q --filter ancestor=${{ env.DB_IMAGE }}) /opt/mssql-tools18/bin/sqlcmd \
             -S localhost -U sa -P '${{ env.SA_PASSWORD }}' \
             -Q "SELECT name FROM sys.databases" -I -C -v TrustServerCertificate=yes
+      
+      - name: Check if SQL Server is accessible
+        run: |
+              nc -zv localhost 1433
+      
+      - name: Test connection from runner to SQL Server
+        run: |
+              curl "jdbc:sqlserver://localhost:1433;user=sa;password=${{ env.SA_PASSWORD }};encrypt=true;trustServerCertificate=true"
 
   Validate-Flyway-Pipeline:
     name: Run Flyway Pipeline
