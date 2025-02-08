@@ -44,7 +44,7 @@ jobs:
       #       apt-get update &&
       #       ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev &&
       #       echo 'export PATH=\$PATH:/opt/mssql-tools/bin' >> ~/.bashrc
-          "
+      #  "
 
       - name: Execute SQL Script to Create Test Databases
         run: |
