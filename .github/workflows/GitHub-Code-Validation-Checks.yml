@@ -29,13 +29,14 @@ jobs:
             -v ${{ github.workspace }}/backups:/var/opt/mssql/backups \
             -v ${{ github.workspace }}/Scripts:/var/opt/mssql/scripts \
             ${{ env.DB_IMAGE }} 
-            
+
       - name: Enabled TCP/IP
         run: |
           CONTAINER_ID=$(docker ps -q --filter ancestor=${{ env.DB_IMAGE }})
           docker exec -i $CONTAINER_ID /bin/bash -c "
             /opt/mssql-tools18/bin/sqlcmd -S 'localhost,${{ env.DB_PORT }}' -U sa -P '${{ env.SA_PASSWORD }}' -Q \
               \"EXEC sp_configure 'remote access', 1; RECONFIGURE;\"
+            "
 
       - name: Wait for SQL Server to be ready
         run: |
