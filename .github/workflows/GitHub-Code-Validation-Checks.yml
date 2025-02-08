@@ -6,7 +6,7 @@ on:
       - release
   schedule:
     - cron: "0 3 * * *"  # Runs at 3 AM UTC every night
-    
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -15,9 +15,9 @@ jobs:
     name: Spin Up Test SQL Server
     runs-on: ubuntu-latest
     env:
-      DB_IMAGE: "mcr.microsoft.com/mssql/server:2022-latest"
+      DB_IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
       DB_PORT: "1433"
-      SA_PASSWORD: "YourStrong!Passw0rd"
+      SA_PASSWORD: "Redg@te1"
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
