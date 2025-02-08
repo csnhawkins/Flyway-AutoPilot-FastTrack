@@ -22,13 +22,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Start SQL Server with Access to Backups & Scripts
+      - name: Start SQL Server with Access to Backups & Scripts and Enable TCP/IP
         run: |
           docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=${{ env.SA_PASSWORD }}" \
             -p ${{ env.DB_PORT }}:1433 -d \
             -v ${{ github.workspace }}/backups:/var/opt/mssql/backups \
             -v ${{ github.workspace }}/Scripts:/var/opt/mssql/scripts \
-            ${{ env.DB_IMAGE }}
+            ${{ env.DB_IMAGE }} \
+            /bin/bash -c " \
+              # Enable TCP/IP in SQL Server configuration \
+              /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P '${{ env.SA_PASSWORD }}' -Q \
+              \"EXEC sp_configure 'remote access', 1; RECONFIGURE;\" && \
+              # Restart SQL Server for the changes to take effect \
+              /opt/mssql/bin/sqlservr --accept-eula"
 
       - name: Wait for SQL Server to be ready
         run: sleep 20  # Ensure SQL Server is fully initialized
